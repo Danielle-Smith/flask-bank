@@ -13,6 +13,7 @@ wtforms = "*"
 flask-cors = "*"
 marshmallow-sqlalchemy = "*"
 flask-bootstrap = "*"
+cors = "*"
 
 [dev-packages]
 
