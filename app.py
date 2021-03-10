@@ -50,19 +50,19 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
-# @app.route('/add-user', methods=['GET', 'POST'])
-# @cross_origin()
-# def add_user():
-#     form = AddUserForm()
+@app.route('/add-user', methods=['POST'])
+@cross_origin()
+def add_user():
+    rqt = request.get_json(force=True)
+    name = rqt["name"]
+    amount = rqt["amount"]
 
-#     if form.validate_on_submit():
-#         new_user = User(name=form.name.data, amount=form.amount.data)
-#         db.session.add(new_user)
-#         db.session.commit()
+    record = User(name, amount)
+    db.session.add(record)
+    db.session.commit()
 
-#         return '<h1>New user has been created!</h1>'
-
-#     return render_template('add.html', form=form)
+    user = User.query.get(record.id)
+    return user_schema.jsonify(user)
 
 @app.route('/user/<id>', methods=["GET"])
 @cross_origin()
@@ -90,6 +90,14 @@ def user_update(id):
     db.session.commit()
     print(user_schema.jsonify(user))
     return user_schema.jsonify(user)
+
+@app.route('/delete-user/<id>', methods=['DELETE'])
+@cross_origin()
+def delete_user(id):
+  user = User.query.filter_by(id=id).first()
+  db.session.delete(user)
+  db.session.commit()
+  return jsonify('user deleted')
 
 if __name__ == '__main__':
     app.run(debug=True)
