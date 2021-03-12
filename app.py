@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_wtf import FlaskForm
@@ -62,7 +62,9 @@ def add_user():
     db.session.commit()
 
     user = User.query.get(record.id)
+    flash("User Added")
     return user_schema.jsonify(user)
+    
 
 @app.route('/user/<id>', methods=["GET"])
 @cross_origin()
@@ -70,14 +72,6 @@ def get_user(id):
     user = User.query.get(id)
     result = user_schema.dump(user)
     return result
-
-# @app.route('/')
-# @cross_origin()
-# def home():
-#     all_users = User.query.all()
-#     result = users_schema.dump(all_users)
-    
-#     return render_template('home.html', names=result)
 
 @app.route('/user-update/<id>', methods=['PATCH'])
 def user_update(id):
