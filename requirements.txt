@@ -18,6 +18,7 @@ Jinja2==3.0.1
 MarkupSafe==2.0.1
 marshmallow==3.12.1
 marshmallow-sqlalchemy==0.26.1
+postgres==3.0.0
 PySocks==1.7.1
 requests==2.25.1
 requests-file==1.5.1

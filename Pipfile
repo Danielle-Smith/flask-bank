@@ -11,6 +11,8 @@ flask-cors = "*"
 marshmallow-sqlalchemy = "*"
 cors = "*"
 flask-wtf = "*"
+postgres = "*"
+wtforms = "*"
 
 [dev-packages]
 autopep8 = "*"
