@@ -10,15 +10,12 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + \
-    os.path.join(basedir, 'app.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://dpmsuznswdcjgh:2ceebb535e5463f883e4bb8ace666acacf2be7f7ba3c3b0f91f75b80dea2d1e1@ec2-3-233-7-12.compute-1.amazonaws.com:5432/d7ndet9b9sdb7f"
 
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
-CORS(app, resources='*')
-# CORS(app)
+CORS(app)
 
 
 class User(db.Model):
