@@ -4,22 +4,22 @@ from flask_marshmallow import Marshmallow
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, Form, SubmitField, validators, ValidationError
 from wtforms.validators import InputRequired
-import marshmallow_sqlalchemy 
+import marshmallow_sqlalchemy
 from flask_cors import CORS, cross_origin
-from flask_bootstrap import Bootstrap
 import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(basedir, 'app.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + \
+    os.path.join(basedir, 'app.sqlite')
 
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
-Bootstrap(app)
 CORS(app, resources='*')
 # CORS(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,17 +30,19 @@ class User(db.Model):
         self.name = name
         self.amount = amount
 
+
 class UserSchema(ma.Schema):
-    class Meta: 
+    class Meta:
         fields = ("id", "name", "amount")
+
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+
 class AddUserForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])
     amount = DecimalField('amount', validators=[InputRequired()])
-
 
 
 @app.route('/users', methods=["GET"])
@@ -49,6 +51,7 @@ def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result)
+
 
 @app.route('/add-user', methods=['POST'])
 @cross_origin()
@@ -64,7 +67,7 @@ def add_user():
     user = User.query.get(record.id)
     flash("User Added")
     return user_schema.jsonify(user)
-    
+
 
 @app.route('/user/<id>', methods=["GET"])
 @cross_origin()
@@ -72,6 +75,7 @@ def get_user(id):
     user = User.query.get(id)
     result = user_schema.dump(user)
     return result
+
 
 @app.route('/user-update/<id>', methods=['PATCH'])
 def user_update(id):
@@ -85,16 +89,15 @@ def user_update(id):
     print(user_schema.jsonify(user))
     return user_schema.jsonify(user)
 
+
 @app.route('/delete-user/<id>', methods=['DELETE'])
 @cross_origin()
 def delete_user(id):
-  user = User.query.filter_by(id=id).first()
-  db.session.delete(user)
-  db.session.commit()
-  return jsonify('user deleted')
+    user = User.query.filter_by(id=id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify('user deleted')
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
+    app.run()

@@ -7,15 +7,13 @@ name = "pypi"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
-flask-wtf = "*"
-wtforms = "*"
-"wtforms.validators" = "*"
 flask-cors = "*"
 marshmallow-sqlalchemy = "*"
-flask-bootstrap = "*"
 cors = "*"
+flask-wtf = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"
