@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 # basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://dpmsuznswdcjgh:2ceebb535e5463f883e4bb8ace666acacf2be7f7ba3c3b0f91f75b80dea2d1e1@ec2-3-233-7-12.compute-1.amazonaws.com:5432/d7ndet9b9sdb7f"
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -54,17 +54,18 @@ def get_users():
 @app.route('/add-user', methods=['POST'])
 @cross_origin()
 def add_user():
-    rqt = request.get_json(force=True)
-    name = rqt["name"]
-    amount = rqt["amount"]
+    if request.method == 'POST':
+        rqt = request.get_json(force=True)
+        name = rqt["name"]
+        amount = rqt["amount"]
 
-    record = User(name, amount)
-    db.session.add(record)
-    db.session.commit()
+        record = User(name, amount)
+        db.session.add(record)
+        db.session.commit()
 
-    user = User.query.get(record.id)
-    flash("User Added")
-    return user_schema.jsonify(user)
+        user = User.query.get(record.id)
+        flash("User Added")
+        return user_schema.jsonify(user)
 
 
 @app.route('/user/<id>', methods=["GET"])
